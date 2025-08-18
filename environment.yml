@@ -1,0 +1,13 @@
+name: notebooks
+channels:
+    - defaults
+    - conda-forge
+    - anaconda
+dependencies:
+    - python=3.10
+    - pip=24
+    - nbformat>=5.10.4
+    - notebook>=7.4.0
+
+    - pip:
+      - -r requirements.txt
