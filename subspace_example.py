@@ -10,12 +10,12 @@ def solve_sos_image(C, A_0, U_basis):
     beta = cp.Variable(len(U_basis))
     objective = cp.Maximize(c)
     constraints = [
-        C - c * A_0 - cp.sum([beta[i] * Ui for i, Ui in enumerate(U_basis)]) >> 0
+        C - c * A_0 + cp.sum([beta[i] * Ui for i, Ui in enumerate(U_basis)]) >> 0
     ]
     problem = cp.Problem(objective, constraints)
     problem.solve(solver=SOLVER)
     assert problem.status == "optimal"
-    H = C - c.value * A_0 - cp.sum([beta[i].value * Ui for i, Ui in enumerate(U_basis)])
+    H = C - c.value * A_0 + cp.sum([beta[i].value * Ui for i, Ui in enumerate(U_basis)])
     info = {"X": constraints[0].dual_value, "H": H, "c": c.value, "beta": beta.value}
     return info
 
@@ -25,7 +25,7 @@ def solve_sos_kernel(C, A_0, B_basis):
     c = cp.Variable()
     objective = cp.Maximize(c)
     constraints = [H >> 0]
-    constraints += [cp.trace(Bi @ (C - c * A_0 - H)) == 0 for Bi in B_basis]
+    constraints += [cp.trace(Bi @ (-C + c * A_0 + H)) == 0 for Bi in B_basis]
     problem = cp.Problem(objective, constraints)
     problem.solve(solver=SOLVER)
     assert problem.status == "optimal"
