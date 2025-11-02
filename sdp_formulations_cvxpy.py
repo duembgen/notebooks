@@ -30,7 +30,7 @@ def solve_sos_image(C, A_0, U_basis):
     ]
     problem = cp.Problem(objective, constraints)
     a, b = start_buffer()
-    problem.solve(solver=SOLVER, verbose=True)
+    problem.solve(solver=SOLVER, verbose=False)
     ttot = end_buffer(a, b)
 
     assert problem.status == "optimal"
